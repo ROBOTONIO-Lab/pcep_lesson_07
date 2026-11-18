@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Μάθημα 7 · Εργασία για το σπίτι · PCEP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/python/python.min.js"></script>
+<style>
+:root{--navy:#0b2545;--navy2:#13315c;--gold:#ffd43b;--gold-soft:#fff6cc;--ink:#1f2937;--mid:#5b6b82;--bg:#f2f4f7;--green:#2e7d32;--red:#c62828}
+*{box-sizing:border-box}
+body{margin:0;font-family:Sora,Calibri,sans-serif;color:var(--ink);background:#fff;line-height:1.55}
+code,pre,.mono{font-family:"JetBrains Mono","Courier New",monospace}
+code{background:var(--bg);padding:1px 6px;border-radius:5px;font-size:.92em;color:var(--navy)}
+pre{background:var(--bg);border-radius:8px;padding:8px 12px;margin:8px 0;font-size:14px;color:var(--navy);overflow-x:auto}
+header{position:sticky;top:0;z-index:20;background:var(--navy);color:#fff;padding:12px 24px;display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center}
+header h1{font-size:19px;margin:0;color:var(--gold)}
+header .grow{flex:1}
+header label{font-size:14px;color:#cfd8e3}
+header input{font-family:inherit;font-size:15px;padding:7px 10px;border-radius:8px;border:2px solid transparent;width:180px}
+header input.need{border-color:var(--gold)}
+.score{font-weight:700;font-size:15px;background:var(--navy2);padding:7px 14px;border-radius:999px}
+.score b{color:var(--gold)}
+.btn{font-family:inherit;font-size:14px;font-weight:600;border:0;border-radius:9px;padding:8px 14px;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.btn:disabled{opacity:.5;cursor:default}
+.b-gold{background:var(--gold);color:var(--navy)}
+.b-navy{background:var(--navy);color:#fff}
+.b-light{background:var(--bg);color:var(--navy)}
+.b-red{background:#fde8e8;color:var(--red)}
+main{max-width:980px;margin:0 auto;padding:10px 24px 80px}
+h2{font-size:26px;color:var(--navy);margin:34px 0 6px}
+.lead{color:var(--mid);margin:0 0 14px}
+.intro{background:var(--bg);border-radius:12px;padding:14px 18px;margin:16px 0}
+.group{margin-top:36px}
+.group h3{font-size:20px;color:var(--navy);margin:0 0 8px}
+.theory{background:var(--gold-soft);border-radius:12px;padding:10px 16px}
+.theory p{margin:6px 0}
+.theory pre{background:#fff}
+.item{border:2px solid var(--bg);border-radius:14px;margin:14px 0;overflow:hidden}
+.item .head{display:flex;align-items:center;gap:12px;padding:12px 16px;background:var(--bg)}
+.item .id{font-weight:700;color:var(--navy);font-size:18px}
+.item .stars{color:#e0a800;letter-spacing:2px}
+.item .badge{margin-left:auto;font-size:13px;font-weight:700;border-radius:999px;padding:3px 12px;background:#fff;color:var(--mid)}
+.item.pass{border-color:var(--green)}
+.item.pass .badge{background:var(--green);color:#fff}
+.item .body{padding:6px 16px 14px}
+.task{margin:6px 0 4px}
+.helpbar{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+.helpbox{display:none;border-radius:12px;padding:10px 16px;margin:8px 0}
+.helpbox.open{display:block}
+.helpbox.hint{background:var(--gold-soft)}
+.helpbox.explain{background:#eaf1fb}
+.helpbox p{margin:6px 0}
+details.exp{margin:6px 0}
+details.exp summary{cursor:pointer;color:var(--navy2);font-weight:600;font-size:14px}
+.ide{border:1px solid #d9dee6;border-radius:12px;overflow:hidden;margin:10px 0 6px;background:#fff}
+.ide .bar{display:flex;flex-wrap:wrap;gap:8px;padding:8px;background:var(--bg);border-bottom:1px solid #d9dee6;align-items:center}
+.ide .bar .status{margin-left:auto;font-size:13px;color:var(--mid)}
+.CodeMirror{height:auto;min-height:60px;font-family:"JetBrains Mono","Courier New",monospace;font-size:14px;line-height:1.5}
+.CodeMirror-scroll{max-height:480px}
+.cm-s-default .cm-comment{color:#7a869a;font-style:italic}
+.cm-s-default .cm-keyword{color:#7b2cbf;font-weight:700}
+.cm-s-default .cm-string{color:#2e7d32}
+.cm-s-default .cm-builtin{color:#13315c;font-weight:700}
+.cm-s-default .cm-number{color:#c2410c}
+.term{background:#0b1a30;color:#e8edf5;font-family:"JetBrains Mono",monospace;font-size:14px;padding:10px 14px;min-height:70px;max-height:240px;overflow-y:auto;white-space:pre-wrap;word-break:break-word}
+.term .err{color:#ff9b9b}
+.term .sys{color:#8fa3bf;font-style:italic}
+.term .tip{color:var(--gold)}
+.term input{background:transparent;border:0;border-bottom:1px solid var(--gold);color:var(--gold);font:inherit;outline:none;width:12em}
+.term .ans{color:var(--gold)}
+.verdict{display:none;padding:10px 14px;font-weight:600;font-size:15px}
+.verdict.ok{display:block;background:#eaf5ea;color:var(--green)}
+.verdict.no{display:block;background:#fde8e8;color:var(--red)}
+.verdict .diff{font-weight:400;font-size:14px;color:var(--ink);margin-top:4px}
+.verdict .diff code{background:#fff}
+.progress{height:10px;background:var(--bg);border-radius:999px;overflow:hidden;margin:8px 0 2px}
+.progress div{height:100%;background:var(--gold);width:0;transition:width .3s}
+ol.steps li{margin:8px 0}
+.warn{background:#fde8e8;border-radius:12px;padding:12px 16px;margin:14px 0}
+.msg{font-size:14px}
+footer{color:var(--mid);font-size:13px;text-align:center;margin-top:50px}
+@media (max-width:640px){header{padding:10px 14px}main{padding:6px 14px 60px}}
+</style>
+</head>
+<body>
+<header>
+  <h1>🏠 Μάθημα 7 · Εργασία σπιτιού</h1>
+  <div class="grow"></div>
+  <label>Όνομα: <input id="name" placeholder="π.χ. Νίκος Π." autocomplete="off"></label>
+  <span class="score">✓ <b id="score">0</b> / <span id="maxscore">0</span></span>
+  <button class="btn b-gold" id="send">📤 Αποστολή κώδικα στο Teams</button>
+  <span class="msg" id="sendmsg"></span>
+</header>
+<main>
+  <div class="intro"><b>8 ασκήσεις με for.</b> Γράψε τον κώδικα και πάτα <b>▶ Τρέξε &amp; Έλεγξε</b>. Κόλλησες; Πάτα <b>💡 Υπόδειξη</b> για μια μικρή βοήθεια ή <b>📖 Εξήγηση με παράδειγμα</b> για να δεις την ιδέα σε ένα παρόμοιο πρόγραμμα, που μπορείς να τρέξεις κι εσύ. Στο τέλος πάτα <b>📤 Αποστολή</b> και ανέβασε το αρχείο στο Teams.</div>
+  <div class="progress"><div id="bar"></div></div>
+  <div id="items"></div>
+
+  <h2>📤 Αποστολή στο Teams</h2>
+  <ol class="steps">
+    <li>Γράψε το <b>όνομά σου</b> πάνω-πάνω, στη σκούρα μπάρα.</li>
+    <li>Πάτα <b>📤 Αποστολή κώδικα στο Teams</b>. Κατεβαίνει ένα αρχείο <code>mathima7_spiti_ΟΝΟΜΑ.py</code> στις <b>Λήψεις</b> (Downloads), με τον κώδικα όλων των ασκήσεων και ποιες πέρασαν τον έλεγχο.</li>
+    <li>Άνοιξε το <b>Teams</b> → ομάδα <b>«PCEP Korydallos 2026 - 2027»</b> → <b>Εργασίες</b> → την εργασία του μαθήματος.</li>
+    <li>Πάτα <b>+ Προσθήκη εργασίας</b> → <b>Αποστολή από αυτήν τη συσκευή</b> και διάλεξε το αρχείο.</li>
+    <li>Πάτα <b>Παράδοση</b>.</li>
+  </ol>
+  <div class="warn">⚠️ Ο κώδικάς σου μένει <b>μόνο σε αυτόν τον υπολογιστή και σε αυτόν τον browser</b>. Σε παράθυρο Επισκέπτη (Guest) ή σε άλλον υπολογιστή <b>χάνεται</b>. Πάτα «Αποστολή» πριν κλείσεις!</div>
+  <footer>ROBOTONIO-Lab · PCEP 2026-27 · Ο κώδικας τρέχει μέσα στον browser σου (Pyodide)</footer>
+</main>
+
+<script>
+const CONFIG = {"items": [{"id": "Σ1", "title": "Προπαίδεια του 7", "stars": 1, "task": "Τύπωσε την προπαίδεια του 7, από <code>7 x 1 = 7</code> έως <code>7 x 10 = 70</code>.", "starter": "# Προπαίδεια του 7\n", "must": ["for", "range("], "hint": "<p>Βρόχος με <code>range(1, 11)</code>. Μέσα: <code>print(\"7 x\", i, \"=\", ...)</code>. Τι μπαίνει στις τελείες;</p>", "explain": "<p><b>Η ιδέα:</b> το <code>i</code> αλλάζει σε κάθε γύρο (1, 2, 3…), οπότε μπορείς να κάνεις πράξεις με αυτό. Το <code>print</code> με κόμματα βάζει μόνο του κενά ανάμεσα.</p><p><b>Παράδειγμα:</b> η προπαίδεια του 2 μέχρι το 3:</p>", "example": "for i in range(1, 4):\n    print(\"2 x\", i, \"=\", 2 * i)\n", "expected": "7 x 1 = 7\n7 x 2 = 14\n7 x 3 = 21\n7 x 4 = 28\n7 x 5 = 35\n7 x 6 = 42\n7 x 7 = 49\n7 x 8 = 56\n7 x 9 = 63\n7 x 10 = 70"}, {"id": "Σ2", "title": "Περιττοί σε μία γραμμή", "stars": 1, "task": "Τύπωσε τους περιττούς από 1 έως 19 <b>στην ίδια γραμμή</b>: <code>1 3 5 7 9 11 13 15 17 19</code>", "starter": "# Περιττοί 1 έως 19 σε μία γραμμή\n", "must": ["for", "range("], "hint": "<p>Ξεκίνα από το 1 με βήμα 2. Για να μην αλλάζει γραμμή: <code>print(i, end=\" \")</code>.</p>", "explain": "<p><b>Η ιδέα:</b> το τρίτο νούμερο του <code>range</code> είναι το βήμα. Το <code>end=\" \"</code> λέει στο <code>print</code>: «στο τέλος βάλε κενό, όχι αλλαγή γραμμής».</p><p><b>Παράδειγμα:</b> ανά 5, από 5 έως 25:</p>", "example": "for i in range(5, 26, 5):\n    print(i, end=\" \")\n", "expected": "1 3 5 7 9 11 13 15 17 19"}, {"id": "Σ3", "title": "Άθροισμα ζυγών", "stars": 2, "task": "Υπολόγισε το άθροισμα των ζυγών 2 + 4 + 6 + … + 50 και τύπωσε <code>Άθροισμα: …</code>", "starter": "# Άθροισμα ζυγών 2 έως 50\n", "must": ["for", "range("], "hint": "<p>Αθροιστής: <code>total = 0</code> πριν τον βρόχο, <code>total = total + i</code> μέσα, <code>print</code> έξω. Το range πρέπει να φτάνει στο 50: πόσο βάζεις για τέλος;</p>", "explain": "<p><b>Η ιδέα:</b> ο αθροιστής είναι ένα «κουμπαράς». Ξεκινάει άδειος (0) και σε κάθε γύρο ρίχνεις μέσα το <code>i</code>. Αν το <code>print</code> είναι <b>μέσα</b> στον βρόχο (με εσοχή), θα τυπώνει σε κάθε γύρο. Θέλουμε μόνο το τελικό, άρα <b>χωρίς εσοχή</b>.</p><p><b>Παράδειγμα:</b> 10 + 20 + 30:</p>", "example": "total = 0\nfor i in range(10, 31, 10):\n    total = total + i\n    print(\"τώρα:\", total)\nprint(\"Τελικό:\", total)\n", "expected": "Άθροισμα: 650"}, {"id": "Σ4", "title": "Παραγοντικό 6!", "stars": 2, "task": "Το 6! (παραγοντικό) είναι 1 × 2 × 3 × 4 × 5 × 6. Υπολόγισέ το και τύπωσε <code>6! = …</code>", "starter": "# 6! = 1 x 2 x 3 x 4 x 5 x 6\n", "must": ["for", "range("], "hint": "<p>Σαν τον αθροιστή, αλλά με <b>πολλαπλασιασμό</b>. Προσοχή: από πού ξεκινάει; Αν ξεκινήσει από 0, τι θα βγει;</p>", "explain": "<p><b>Η ιδέα:</b> στο άθροισμα ξεκινάμε από 0, γιατί 0 + κάτι = κάτι. Στον πολλαπλασιασμό ξεκινάμε από <b>1</b>, γιατί 1 × κάτι = κάτι. Από 0 θα έβγαινε πάντα 0!</p><p><b>Παράδειγμα:</b> 2 × 2 × 2 × 2 (δύναμη):</p>", "example": "result = 1\nfor i in range(4):\n    result = result * 2\nprint(\"2 στην 4η =\", result)\n", "expected": "6! = 720"}, {"id": "Σ5", "title": "Πυραμίδα αριθμών", "stars": 2, "task": "Τύπωσε:<pre>1\n12\n123\n1234\n12345</pre>", "starter": "# Πυραμίδα αριθμών\n", "must": ["for", "range("], "hint": "<p>Ένα κείμενο <code>s = \"\"</code> που μεγαλώνει σε κάθε γύρο, όπως η σειρά στη Μνήμη: <code>s = s + str(i)</code>. Τύπωνε <b>μέσα</b> στον βρόχο.</p>", "explain": "<p><b>Η ιδέα:</b> στη Μνήμη κολλούσαμε ψηφία στο τέλος της σειράς. Εδώ το ίδιο, αλλά με το <code>i</code>. Το <code>str()</code> χρειάζεται γιατί δεν κολλάς κείμενο με αριθμό.</p><p><b>Παράδειγμα:</b> λέξη που χτίζεται γράμμα-γράμμα:</p>", "example": "s = \"\"\nfor c in \"ΚΑΛΗ\":\n    s = s + c\n    print(s)\n", "expected": "1\n12\n123\n1234\n12345"}, {"id": "Σ6", "title": "Φωνήεντα", "stars": 2, "task": "Μέτρα τα φωνήεντα (a, e, i, o, u) στη λέξη <code>programming</code> και τύπωσε <code>Φωνήεντα: …</code>", "starter": "# Φωνήεντα στη λέξη programming\nword = \"programming\"\n", "must": ["for"], "hint": "<p><code>for c in word:</code> και μετρητής. Ένα γράμμα είναι φωνήεν αν είναι a <b>ή</b> e <b>ή</b> i… Γράψε κάθε σύγκριση ολόκληρη: <code>c == \"a\" or c == \"e\"</code>.</p>", "explain": "<p><b>Η ιδέα:</b> με <code>or</code> φτάνει να ισχύει <b>ένα</b>. Παγίδα: το <code>c == \"a\" or \"e\"</code> είναι λάθος, γιατί η Python δεν το διαβάζει όπως εμείς. Κάθε σύγκριση γράφεται ολόκληρη.</p><p><b>Παράδειγμα:</b> μέτρα τα x και y στη λέξη:</p>", "example": "count = 0\nfor c in \"xylophone y\":\n    if c == \"x\" or c == \"y\":\n        count = count + 1\nprint(\"x ή y:\", count)\n", "expected": "Φωνήεντα: 3"}, {"id": "Σ7", "title": "Το πρώτο πολλαπλάσιο του 13 μετά το 100", "stars": 3, "task": "Βρες και τύπωσε τον <b>πρώτο</b> αριθμό μετά το 100 που διαιρείται με το 13. Τύπωσε μόνο αυτόν.", "starter": "# Πρώτο πολλαπλάσιο του 13 μετά το 100\n", "must": ["for", "break"], "hint": "<p>Ψάξε από το 101 και μετά. Μόλις βρεις έναν με <code>n % 13 == 0</code>, τύπωσέ τον και <code>break</code>.</p>", "explain": "<p><b>Η ιδέα:</b> χωρίς <code>break</code> θα τύπωνε <b>όλα</b> τα πολλαπλάσια (104, 117, 130…). Το <code>break</code> σταματά τον βρόχο στο πρώτο. Το <code>n % 13 == 0</code> σημαίνει «το υπόλοιπο της διαίρεσης με 13 είναι 0», δηλαδή διαιρείται.</p><p><b>Παράδειγμα:</b> ο πρώτος από το 50 που διαιρείται με το 6:</p>", "example": "for n in range(50, 100):\n    print(\"ελέγχω\", n)\n    if n % 6 == 0:\n        print(\"Βρήκα:\", n)\n        break\n", "expected": "104"}, {"id": "Σ8", "title": "Είναι το 29 πρώτος αριθμός;", "stars": 3, "task": "Ένας αριθμός είναι <b>πρώτος</b> αν δεν διαιρείται με κανέναν από το 2 μέχρι τον ίδιο μείον 1. Έλεγξε το 29: τύπωσε <code>Πρώτος!</code> ή <code>Δεν είναι πρώτος</code>. Χρησιμοποίησε <code>for … else</code>.<br>🔬 Μετά δοκίμασε το 91. (Ο έλεγχος θα πει ✗, γιατί ελέγχει για το 29. Ξαναβάλε 29 και ξανατρέξε πριν την αποστολή.)", "starter": "# Είναι το 29 πρώτος;\nn = 29\n", "must": ["for", "break", "else"], "hint": "<p><code>for d in range(2, n):</code>. Αν βρεις διαιρέτη: τύπωσε «Δεν είναι πρώτος» και <code>break</code>. Το «Πρώτος!» μπαίνει στο <code>else</code> του <code>for</code>, στοιχισμένο με το <code>for</code>.</p>", "explain": "<p><b>Η ιδέα:</b> το <code>else</code> του <code>for</code> τρέχει μόνο αν ο βρόχος τελείωσε <b>χωρίς break</b>, δηλαδή αν δεν βρήκαμε κανέναν διαιρέτη. Ακριβώς όπως το GAME OVER στη Μνήμη!</p><p><b>Παράδειγμα:</b> υπάρχει γράμμα Z στη λέξη;</p>", "example": "for c in \"ROBOT\":\n    if c == \"Z\":\n        print(\"Βρήκα Z!\")\n        break\nelse:\n    print(\"Κανένα Z\")\n", "expected": "Πρώτος!"}], "store": "pcep_l07_home_v1", "filePrefix": "mathima7_spiti", "fileTitle": "PCEP · Μάθημα 7 · Εργασία σπιτιού (for)"};
+const ITEMS = CONFIG.items;
+const PYODIDE_URL = "https://cdn.jsdelivr.net/pyodide/v0.29.4/full/";
+const STORE = CONFIG.store;
+const CHECK_TIMEOUT_MS = 8000;
+const MAX_OUT = 20000;
+
+/* ---------- storage ---------- */
+let state = { name: "", codes: {}, passed: {} };
+try { const s = JSON.parse(localStorage.getItem(STORE)); if (s) state = Object.assign(state, s); } catch (e) {}
+function save() { try { localStorage.setItem(STORE, JSON.stringify(state)); } catch (e) {} }
+
+/* ---------- python runner (one worker) ---------- */
+const WORKER_SRC = `
+importScripts("${PYODIDE_URL}pyodide.js");
+let py = null, pendingInput = null, total = 0, flooded = false;
+const LIMIT = ${MAX_OUT};
+const dec = new TextDecoder();
+async function boot() {
+  py = await loadPyodide({ indexURL: "${PYODIDE_URL}" });
+  py.setStdout({ write: (buf) => {
+    total += buf.length;
+    if (total > LIMIT) { if (!flooded) { flooded = true; postMessage({ t: "flood" }); } throw new Error("too much output"); }
+    postMessage({ t: "out", s: dec.decode(buf, { stream: true }) }); return buf.length; } });
+  py.setStderr({ write: (buf) => { postMessage({ t: "err", s: dec.decode(buf, { stream: true }) }); return buf.length; } });
+  py.globals.set("__js_input", (p) => new Promise((res) => { pendingInput = res; postMessage({ t: "input", p: p }); }));
+  await py.runPythonAsync(\`
+import sys, asyncio
+try:
+    sys.stdout.reconfigure(line_buffering=True)
+except Exception:
+    pass
+async def __input(prompt=""):
+    sys.stdout.write(str(prompt))
+    sys.stdout.flush()
+    return str(await __js_input(""))
+async def __sleep(s):
+    sys.stdout.flush()
+    await asyncio.sleep(s)
+\`);
+  postMessage({ t: "ready" });
+}
+const booted = boot().catch((e) => postMessage({ t: "fatal", s: String(e) }));
+onmessage = async (e) => {
+  const m = e.data;
+  if (m.t === "input") { if (pendingInput) { const r = pendingInput; pendingInput = null; r(m.v); } return; }
+  if (m.t === "run") {
+    await booted;
+    total = 0; flooded = false;
+    const ns = py.globals.get("dict")();
+    ns.set("__input", py.globals.get("__input"));
+    ns.set("__sleep", py.globals.get("__sleep"));
+    ns.set("__name__", "__main__");
+    try {
+      await py.runPythonAsync(m.code, { globals: ns, filename: "kodikas.py" });
+      py.runPython("import sys; sys.stdout.flush(); sys.stderr.flush()");
+      postMessage({ t: "done", ok: true });
+    } catch (err) {
+      try { py.runPython("import sys; sys.stdout.flush()"); } catch (_) {}
+      postMessage({ t: "pyerr", s: String(err.message || err) });
+      postMessage({ t: "done", ok: false });
+    } finally { ns.destroy(); }
+  }
+};`;
+
+let worker = null, workerReady = false, active = null;
+function makeWorker() {
+  workerReady = false;
+  const url = URL.createObjectURL(new Blob([WORKER_SRC], { type: "text/javascript" }));
+  worker = new Worker(url);
+  worker.onmessage = (e) => {
+    const m = e.data;
+    if (m.t === "ready") { workerReady = true; if (active && active.waiting) { active.waiting = false; active.term.clearSys(); startActive(); } return; }
+    if (m.t === "fatal") { if (active) active.term.line("Δεν φόρτωσε η Python. Έλεγξε τη σύνδεση στο internet και ξαναφόρτωσε τη σελίδα.", "err"); finish(false); return; }
+    if (!active) return;
+    if (m.t === "flood") { active.term.line("■ Πάρα πολλή έξοδος — μήπως ο βρόχος δεν σταματάει ποτέ; (π.χ. ξέχασες να αλλάζεις τη μεταβλητή)", "tip"); stopRun(true); return; }
+    if (m.t === "out" || m.t === "err") {
+      if (m.t === "out") active.out += m.s;
+      active.term.write(m.s, m.t === "err" ? "err" : null);
+    }
+    else if (m.t === "input") active.term.ask((v) => worker.postMessage({ t: "input", v }));
+    else if (m.t === "pyerr") active.term.error(m.s);
+    else if (m.t === "done") { active.term.line(m.ok ? "— Τέλος προγράμματος —" : "— Σταμάτησε με σφάλμα —", "sys"); finish(m.ok); }
+  };
+}
+function startActive() {
+  worker.postMessage({ t: "run", code: active.code });
+  if (active.timed) active.timer = setTimeout(() => {
+    if (!active) return;
+    active.term.line("⏱ Το πρόγραμμα τρέχει πάνω από 8 δευτερόλεπτα. Μήπως ο βρόχος δεν σταματάει ποτέ;", "tip");
+    stopRun(true);
+  }, CHECK_TIMEOUT_MS);
+}
+function finish(ok) {
+  if (!active) return;
+  const a = active; active = null;
+  clearTimeout(a.timer);
+  a.ui.running(false);
+  if (a.onDone) a.onDone(ok, a.out);
+}
+function transform(code) {
+  return code.replace(/\binput\s*\(/g, "await __input(").replace(/\btime\s*\.\s*sleep\s*\(/g, "await __sleep(");
+}
+function runCode(code, term, ui, onDone) {
+  if (active) stopRun(true);
+  if (!worker) makeWorker();
+  term.clear();
+  const timed = !/\binput\s*\(/.test(code);
+  active = { term, ui, code: transform(code), waiting: !workerReady, out: "", onDone, timed };
+  ui.running(true);
+  if (workerReady) startActive();
+  else term.line("Φορτώνει η Python… (μόνο την πρώτη φορά, λίγα δευτερόλεπτα)", "sys");
+}
+function stopRun(silent) {
+  if (!active) return;
+  worker.terminate(); worker = null; workerReady = false;
+  if (!silent) active.term.line("■ Σταμάτησες το πρόγραμμα.", "sys");
+  active.term.closeAsk();
+  finish(false);
+  makeWorker();
+}
+
+/* ---------- terminal ---------- */
+function Terminal(el) {
+  let askEl = null, pend = "", raf = 0;
+  const scroll = () => { el.scrollTop = el.scrollHeight; };
+  const flush = () => {
+    if (raf) { cancelAnimationFrame(raf); raf = 0; }
+    if (!pend) return;
+    const sp = document.createElement("span"); sp.textContent = pend; pend = ""; el.appendChild(sp);
+    while (el.childNodes.length > 400) el.removeChild(el.firstChild);
+    scroll();
+  };
+  const t = {
+    clear() { pend = ""; if (raf) { cancelAnimationFrame(raf); raf = 0; } el.textContent = ""; askEl = null; },
+    clearSys() { el.querySelectorAll(".sys").forEach((n) => n.remove()); },
+    write(s, cls) {
+      if (!cls) { pend += s; if (!raf) raf = requestAnimationFrame(flush); return; }
+      flush(); const sp = document.createElement("span"); sp.className = cls; sp.textContent = s; el.appendChild(sp); scroll();
+    },
+    line(s, cls) { flush(); if (el.textContent && !el.textContent.endsWith("\n")) t.write("\n"); t.write(s + "\n", cls); },
+    ask(cb) {
+      flush();
+      const inp = document.createElement("input"); inp.setAttribute("aria-label", "Η απάντησή σου");
+      el.appendChild(inp); askEl = inp; scroll(); inp.focus();
+      inp.addEventListener("keydown", (ev) => {
+        if (ev.key !== "Enter") return;
+        const v = inp.value; const sp = document.createElement("span"); sp.className = "ans"; sp.textContent = v + "\n";
+        inp.replaceWith(sp); askEl = null; scroll(); cb(v);
+      });
+    },
+    closeAsk() { if (askEl) { askEl.remove(); askEl = null; } },
+    error(msg) {
+      const lines = msg.split("\n"); const i = lines.findIndex((l) => l.includes('File "kodikas.py"'));
+      const keep = (i >= 0 ? lines.slice(i) : lines.slice(-3)).filter((l) => l.trim()).join("\n").replace(/kodikas\.py/g, "ο κώδικάς σου");
+      t.line(keep, "err");
+      const last = lines.filter((l) => l.trim()).pop() || "";
+      const tip = hint(last); if (tip) t.line("💡 " + tip, "tip");
+    },
+  };
+  return t;
+}
+function hint(e) {
+  if (/name '_+' is not defined/.test(e)) return "Συμπλήρωσε τα κενά ___ με τη σωστή τιμή.";
+  if (/can only concatenate str \(not "int"\)/.test(e)) return "Κολλάς κείμενο με αριθμό. Μήπως ξέχασες το str( );";
+  if (/unsupported operand type.*'int' and 'str'/.test(e)) return "Προσθέτεις αριθμό με κείμενο. Μήπως χρειάζεται int( ) ή str( );";
+  if (/'(int|str)' object is not iterable/.test(e)) return "Το for θέλει κάτι να «περάσει»: range(...) ή κείμενο. Μήπως ξέχασες το range( );";
+  if (/invalid literal for int/.test(e)) return "Το int( ) πήρε κάτι που δεν είναι ακέραιος.";
+  if (/NameError/.test(e)) { const m = e.match(/name '(.+?)'/); return "Η Python δεν ξέρει το «" + (m ? m[1] : "?") + "». Ορθογραφία; Το όρισες πριν το χρησιμοποιήσεις;"; }
+  if (/IndentationError/.test(e)) return "Πρόβλημα με τα κενά στην αρχή της γραμμής (εσοχή). Ό,τι είναι μέσα στο for θέλει 4 κενά.";
+  if (/'break' outside loop|'continue' (not properly in|outside) loop/.test(e)) return "Το break / continue πρέπει να είναι μέσα σε βρόχο (με εσοχή).";
+  if (/await.*outside/.test(e)) return "Μην βάζεις input( ) μέσα σε def σε αυτή τη σελίδα.";
+  if (/SyntaxError/.test(e)) return "Λάθος σύνταξης: έλεγξε άνω-κάτω τελείες ( : ) στο τέλος του for/if, παρενθέσεις και εισαγωγικά.";
+  if (/ZeroDivisionError/.test(e)) return "Διαίρεση με το μηδέν!";
+  return "";
+}
+
+/* ---------- checking ---------- */
+function norm(s) { const l = s.replace(/\r/g, "").split("\n").map((x) => x.replace(/\s+$/, "")); while (l.length && !l[l.length - 1]) l.pop(); return l; }
+function stripComments(code) { return code.split("\n").map((l) => l.replace(/#.*$/, "")).join("\n"); }
+function verdict(item, ok, out, code) {
+  if (!ok) return { pass: false, html: "✗ Το πρόγραμμα δεν τελείωσε κανονικά. Διόρθωσε το σφάλμα και ξαναδοκίμασε." };
+  const got = norm(out), exp = norm(item.expected);
+  let n = Math.max(got.length, exp.length), bad = -1;
+  for (let i = 0; i < n; i++) if ((got[i] ?? null) !== (exp[i] ?? null)) { bad = i; break; }
+  const esc = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;");
+  if (bad >= 0) {
+    let d;
+    if (got.length === 0) d = "Δεν τύπωσε τίποτα.";
+    else if (bad >= got.length) d = `Λείπουν γραμμές. Μετά τη γραμμή ${got.length} περίμενα: <code>${esc(exp[bad])}</code>`;
+    else if (bad >= exp.length) d = `Τύπωσες περισσότερες γραμμές απ' όσες πρέπει. Η γραμμή ${bad + 1} (<code>${esc(got[bad])}</code>) περισσεύει.`;
+    else d = `Γραμμή ${bad + 1}: περίμενα <code>${esc(exp[bad])}</code>, τύπωσες <code>${esc(got[bad])}</code>`;
+    return { pass: false, html: "✗ Όχι ακόμα!<div class='diff'>" + d + "</div>" };
+  }
+  const clean = stripComments(code);
+  const miss = (item.must || []).filter((m) => !clean.includes(m));
+  if (miss.length) return { pass: false, html: "✗ Η έξοδος είναι σωστή, αλλά πρέπει να χρησιμοποιήσεις: " + miss.map((m) => "<code>" + esc(m.replace("(", "")) + "</code>").join(", ") };
+  return { pass: true, html: "✓ Σωστό! Μπράβο!" };
+}
+
+/* ---------- IDE widget ---------- */
+function makeIDE(host, opts) {
+  host.classList.add("ide");
+  host.innerHTML = `<div class="bar"><button class="btn b-navy run">${opts.check ? "▶ Τρέξε & Έλεγξε" : "▶ Τρέξε"}</button><button class="btn b-red stop" disabled>■ Σταμάτα</button>${opts.reset ? '<button class="btn b-light reset">↺ Από την αρχή</button>' : ""}<span class="status"></span></div><div class="ed"></div><div class="term" aria-live="polite"></div><div class="verdict"></div>`;
+  const cm = CodeMirror(host.querySelector(".ed"), {
+    value: opts.value, mode: "python", lineNumbers: true, indentUnit: 4, tabSize: 4, indentWithTabs: false, viewportMargin: Infinity,
+    extraKeys: { Tab: (c) => c.somethingSelected() ? c.indentSelection("add") : c.replaceSelection("    "), "Shift-Tab": (c) => c.indentSelection("subtract") },
+  });
+  if (opts.onChange) cm.on("change", () => opts.onChange(cm.getValue()));
+  const term = Terminal(host.querySelector(".term"));
+  const vEl = host.querySelector(".verdict");
+  const runB = host.querySelector(".run"), stopB = host.querySelector(".stop"), st = host.querySelector(".status");
+  const ui = { running(on) { runB.disabled = on; stopB.disabled = !on; st.textContent = on ? "τρέχει…" : ""; } };
+  term.line("Πάτα ▶ για να τρέξει ο κώδικας.", "sys");
+  runB.onclick = () => {
+    vEl.className = "verdict"; vEl.innerHTML = "";
+    const code = cm.getValue();
+    runCode(code, term, ui, opts.check ? (ok, out) => {
+      const v = verdict(opts.check, ok, out, code);
+      vEl.className = "verdict " + (v.pass ? "ok" : "no"); vEl.innerHTML = v.html;
+      opts.onVerdict && opts.onVerdict(v.pass);
+    } : null);
+  };
+  stopB.onclick = () => stopRun(false);
+  const rb = host.querySelector(".reset");
+  if (rb) rb.onclick = () => {
+    if (rb.dataset.armed) { delete rb.dataset.armed; rb.textContent = "↺ Από την αρχή"; cm.setValue(opts.reset()); term.clear(); vEl.className = "verdict"; term.line("Ο κώδικας επανήλθε.", "sys"); return; }
+    rb.dataset.armed = "1"; rb.textContent = "Σίγουρα; Πάτα ξανά";
+    setTimeout(() => { if (rb.dataset.armed) { delete rb.dataset.armed; rb.textContent = "↺ Από την αρχή"; } }, 4000);
+  };
+  return cm;
+}
+
+/* ---------- build page ---------- */
+const host = document.getElementById("items");
+const editors = {};
+ITEMS.forEach((x) => {
+  if (x.group) {
+    const g = document.createElement("div"); g.className = "group";
+    g.innerHTML = `<h3>${x.group}</h3>${x.theory ? `<div class="theory">${x.theory}</div>` : ""}`;
+    host.appendChild(g);
+  }
+  const card = document.createElement("div");
+  card.className = "item"; card.id = "item-" + x.id;
+  card.innerHTML = `<div class="head"><span class="id">${x.id} · ${x.title}</span>${x.stars ? `<span class="stars">${"★".repeat(x.stars)}</span>` : ""}<span class="badge">όχι ακόμα</span></div>
+  <div class="body"><div class="task">${x.task}</div>
+  <details class="exp"><summary>👀 Τι πρέπει να τυπώσει</summary><pre></pre></details>
+  ${x.hint ? `<div class="helpbar"><button class="btn b-light hb">💡 Υπόδειξη</button><button class="btn b-light eb">📖 Εξήγηση με παράδειγμα</button></div>
+  <div class="helpbox hint">${x.hint}</div><div class="helpbox explain">${x.explain}<div class="exide"></div><p>Δοκίμασε να αλλάξεις το παράδειγμα και ξανατρέξε το. Μετά γύρνα στην άσκηση!</p></div>` : ""}
+  <div class="idehost"></div></div>`;
+  card.querySelector("details pre").textContent = x.expected;
+  host.appendChild(card);
+  if (x.hint) {
+    const hb = card.querySelector(".hb"), eb = card.querySelector(".eb");
+    const hbox = card.querySelector(".helpbox.hint"), ebox = card.querySelector(".helpbox.explain");
+    let exMade = false;
+    hb.onclick = () => { hbox.classList.toggle("open"); };
+    eb.onclick = () => {
+      ebox.classList.toggle("open");
+      if (!exMade) { exMade = true; makeIDE(ebox.querySelector(".exide"), { value: x.example }); }
+    };
+  }
+  editors[x.id] = makeIDE(card.querySelector(".idehost"), {
+    value: state.codes[x.id] ?? x.starter,
+    check: x,
+    reset: () => x.starter,
+    onChange: (v) => { state.codes[x.id] = v; if (state.passed[x.id]) { state.passed[x.id] = false; refresh(); setBadge(x.id, "άλλαξε — ξανατρέξε"); } save(); },
+    onVerdict: (p) => { state.passed[x.id] = p; save(); refresh(); },
+  });
+});
+function setBadge(id, txt) { document.querySelector("#item-" + id + " .badge").textContent = txt; }
+function refresh() {
+  let n = 0;
+  ITEMS.forEach((x) => {
+    const p = !!state.passed[x.id];
+    document.getElementById("item-" + x.id).classList.toggle("pass", p);
+    if (p) { n++; setBadge(x.id, "✓ σωστό"); }
+    else if (document.querySelector("#item-" + x.id + " .badge").textContent === "✓ σωστό") setBadge(x.id, "όχι ακόμα");
+  });
+  document.getElementById("score").textContent = n;
+  document.getElementById("maxscore").textContent = ITEMS.length;
+  document.getElementById("bar").style.width = (100 * n / ITEMS.length) + "%";
+}
+refresh();
+
+/* ---------- name + download ---------- */
+const nameEl = document.getElementById("name");
+nameEl.value = state.name || "";
+nameEl.oninput = () => { state.name = nameEl.value; save(); nameEl.classList.remove("need"); };
+document.getElementById("send").onclick = () => {
+  const msg = document.getElementById("sendmsg");
+  const name = nameEl.value.trim();
+  if (!name) { nameEl.classList.add("need"); nameEl.focus(); msg.textContent = "← Γράψε πρώτα το όνομά σου"; return; }
+  msg.textContent = "";
+  const passed = ITEMS.filter((x) => state.passed[x.id]);
+  const d = new Date();
+  const parts = [
+    "# ===========================================",
+    "# " + CONFIG.fileTitle,
+    "# Μαθητής: " + name,
+    "# Ημερομηνία: " + d.toLocaleDateString("el-GR") + " " + d.toLocaleTimeString("el-GR", { hour: "2-digit", minute: "2-digit" }),
+    "# Πέρασαν τον αυτόματο έλεγχο: " + passed.length + " / " + ITEMS.length + (passed.length ? " (" + passed.map((x) => x.id).join(", ") + ")" : ""),
+    "# ===========================================",
+    "",
+  ];
+  ITEMS.forEach((x) => {
+    const code = (editors[x.id] ? editors[x.id].getValue() : (state.codes[x.id] ?? x.starter)).replace(/\s+$/, "");
+    const touched = state.codes[x.id] != null && state.codes[x.id] !== x.starter;
+    parts.push("", "# ---- " + x.id + " · " + x.title + " ---- " + (state.passed[x.id] ? "✓ ΣΩΣΤΟ" : touched ? "✗ δεν πέρασε τον έλεγχο" : "— δεν το δούλεψα"));
+    parts.push(code);
+  });
+  const blob = new Blob([parts.join("\n") + "\n"], { type: "text/x-python;charset=utf-8" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = CONFIG.filePrefix + "_" + name.replace(/[\\/:*?"<>|.]+/g, "").replace(/\s+/g, "_") + ".py";
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+  msg.textContent = "✔ Κατέβηκε! Ανέβασέ το στο Teams";
+};
+makeWorker();
+</script>
+</body>
+</html>
