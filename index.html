@@ -83,6 +83,14 @@ ol.steps li{margin:8px 0}
 .warn{background:#fde8e8;border-radius:12px;padding:12px 16px;margin:14px 0}
 .msg{font-size:14px}
 footer{color:var(--mid);font-size:13px;text-align:center;margin-top:50px}
+.links{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin:14px 0}
+.links a{display:block;text-decoration:none;border-radius:12px;padding:12px 16px;background:var(--bg);color:var(--navy);border:2px solid transparent}
+.links a:hover{border-color:var(--navy)}
+.links a b{display:block;font-size:16px}
+.links a span{font-size:13px;color:var(--mid)}
+.links a.main{background:var(--navy);color:#fff}
+.links a.main b{color:var(--gold)}
+.links a.main span{color:#cfd8e3}
 @media (max-width:640px){header{padding:10px 14px}main{padding:6px 14px 60px}}
 </style>
 </head>
@@ -97,6 +105,11 @@ footer{color:var(--mid);font-size:13px;text-align:center;margin-top:50px}
 </header>
 <main>
   <div class="intro"><b>Σήμερα:</b> ο βρόχος <code>for</code> με <code>range()</code>. Λύσε τις προκλήσεις με τη σειρά. Συμπλήρωσε τα <code>___</code> και πάτα <b>▶ Τρέξε &amp; Έλεγξε</b>. Η σελίδα σού λέει αμέσως αν η έξοδος είναι σωστή. Αν κολλήσεις, άνοιξε το <b>👀 Τι πρέπει να τυπώσει</b>.</div>
+  <div class="links">
+    <a class="main" href="revision.html"><b>📚 Επανάληψη Μαθημάτων 1–7</b><span>Θεωρία, παραδείγματα και αυτοέλεγχος πριν το κουίζ</span></a>
+    <a href="homework.html"><b>🏠 Εργασία σπιτιού</b><span>8 ασκήσεις με for, υποδείξεις και εξηγήσεις</span></a>
+    <a href="problem.html"><b>🐷 Ο κουμπαράς του Νίκου</b><span>Πρόβλημα με for σε 4 μέρη</span></a>
+  </div>
   <div class="progress"><div id="bar"></div></div>
   <div id="items"></div>
 
