@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Επανάληψη Μαθημάτων 1–7 · PCEP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/python/python.min.js"></script>
+<style>
+:root{--navy:#0b2545;--navy2:#13315c;--gold:#ffd43b;--gold-soft:#fff6cc;--ink:#1f2937;--mid:#5b6b82;--bg:#f2f4f7;--green:#2e7d32;--red:#c62828}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:120px}
+body{margin:0;font-family:Sora,Calibri,sans-serif;color:var(--ink);background:#fff;line-height:1.6}
+code,pre{font-family:"JetBrains Mono","Courier New",monospace}
+code{background:var(--bg);padding:1px 6px;border-radius:5px;font-size:.92em;color:var(--navy)}
+header{position:sticky;top:0;z-index:20;background:var(--navy);color:#fff;padding:12px 24px}
+.hrow{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center}
+header h1{font-size:19px;margin:0;color:var(--gold)}
+header .grow{flex:1}
+.score{font-weight:700;font-size:15px;background:var(--navy2);padding:6px 14px;border-radius:999px}
+.score b{color:var(--gold)}
+nav{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+nav a{font-size:13px;text-decoration:none;color:#fff;background:var(--navy2);padding:3px 10px;border-radius:999px;white-space:nowrap}
+nav a.done{background:var(--green)}
+nav a.part{background:#7a5c00}
+main{max-width:960px;margin:0 auto;padding:10px 24px 80px}
+.intro{background:var(--bg);border-radius:12px;padding:14px 18px;margin:18px 0}
+.intro ol{margin:6px 0;padding-left:22px}
+section.topic{margin-top:44px;padding-top:6px;border-top:3px solid var(--bg)}
+section.topic h2{font-size:24px;color:var(--navy);margin:10px 0 10px;display:flex;align-items:center;gap:12px}
+section.topic h2 .n{display:inline-grid;place-items:center;min-width:38px;height:38px;border-radius:50%;background:var(--navy);color:var(--gold);font-size:17px}
+h3{font-size:17px;color:var(--navy2);margin:20px 0 6px}
+.theory{background:#fff;border:1px solid #e3e7ee;border-radius:12px;padding:6px 18px}
+.theory ul{padding-left:22px}
+table.t{border-collapse:collapse;margin:10px 0;width:100%}
+table.t td{border-bottom:1px solid #e3e7ee;padding:6px 10px;vertical-align:top}
+table.t td:first-child{white-space:nowrap;width:1%}
+.pit{background:var(--gold-soft);border-radius:12px;padding:10px 18px;margin:14px 0}
+.pit b.h{color:var(--navy);display:block;margin-bottom:4px}
+.pit ul{margin:4px 0;padding-left:22px}
+.ide{border:1px solid #d9dee6;border-radius:12px;overflow:hidden;margin:10px 0 6px;background:#fff}
+.ide .bar{display:flex;flex-wrap:wrap;gap:8px;padding:8px;background:var(--bg);border-bottom:1px solid #d9dee6;align-items:center}
+.ide .bar .status{margin-left:auto;font-size:13px;color:var(--mid)}
+.btn{font-family:inherit;font-size:14px;font-weight:600;border:0;border-radius:9px;padding:8px 14px;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.btn:disabled{opacity:.5;cursor:default}
+.b-navy{background:var(--navy);color:#fff}
+.b-gold{background:var(--gold);color:var(--navy)}
+.b-light{background:var(--bg);color:var(--navy)}
+.b-red{background:#fde8e8;color:var(--red)}
+.CodeMirror{height:auto;min-height:60px;font-family:"JetBrains Mono","Courier New",monospace;font-size:14px;line-height:1.5}
+.CodeMirror-scroll{max-height:420px}
+.cm-s-default .cm-comment{color:#7a869a;font-style:italic}
+.cm-s-default .cm-keyword{color:#7b2cbf;font-weight:700}
+.cm-s-default .cm-string{color:#2e7d32}
+.cm-s-default .cm-builtin{color:#13315c;font-weight:700}
+.cm-s-default .cm-number{color:#c2410c}
+.term{background:#0b1a30;color:#e8edf5;font-family:"JetBrains Mono",monospace;font-size:14px;padding:10px 14px;min-height:60px;max-height:240px;overflow-y:auto;white-space:pre-wrap;word-break:break-word}
+.term .err{color:#ff9b9b}.term .sys{color:#8fa3bf;font-style:italic}.term .tip{color:var(--gold)}
+.term input{background:transparent;border:0;border-bottom:1px solid var(--gold);color:var(--gold);font:inherit;outline:none;width:12em}
+.term .ans{color:var(--gold)}
+.verdict{display:none}
+.q{border:2px solid var(--bg);border-radius:14px;margin:14px 0;overflow:hidden}
+.q.ok{border-color:var(--green)}.q.no{border-color:var(--red)}
+.q .qh{display:flex;align-items:center;gap:10px;padding:10px 16px;background:var(--bg);font-weight:700;color:var(--navy)}
+.q .qh .res{margin-left:auto;font-size:13px}
+.q .qb{padding:10px 16px 14px}
+.q .qt{font-weight:600;margin:2px 0 8px}
+.q pre.code{background:var(--navy);color:#e8edf5;border-radius:10px;padding:12px 16px;margin:0 0 10px;font-size:15px;overflow-x:auto}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.opt{font-family:"JetBrains Mono",monospace;font-size:14px;text-align:left;background:#fff;border:2px solid #d9dee6;border-radius:10px;padding:8px 12px;cursor:pointer;white-space:pre-wrap;color:var(--ink);display:flex;gap:10px;align-items:flex-start}
+.opt .L{font-family:Sora,sans-serif;font-weight:700;color:var(--mid)}
+.opt.sel{border-color:var(--navy);background:#eef3fb}
+.opt.right{border-color:var(--green);background:#eaf5ea}
+.opt.wrong{border-color:var(--red);background:#fde8e8}
+.opt:disabled{cursor:default}
+.qact{margin-top:10px;display:flex;gap:10px;align-items:center}
+.exp{display:none;margin-top:12px;background:#f7f9fc;border-radius:10px;padding:10px 14px}
+.exp.open{display:block}
+.exp p{margin:6px 0}
+.exp b{color:var(--navy)}
+.final{background:var(--navy);color:#fff;border-radius:14px;padding:18px 22px;margin-top:44px}
+.final h2{color:var(--gold);margin:0 0 8px}
+.final a{color:var(--gold)}
+footer{color:var(--mid);font-size:13px;text-align:center;margin-top:40px}
+@media (max-width:640px){.opts{grid-template-columns:1fr}header{padding:10px 14px}main{padding:6px 14px 60px}}
+</style>
+</head>
+<body>
+<header>
+  <div class="hrow"><h1>📚 Επανάληψη · Μαθήματα 1–7</h1><div class="grow"></div><span class="score">Αυτοέλεγχος: <b id="score">0</b> / <span id="max">0</span> σωστές</span></div>
+  <nav id="nav"></nav>
+</header>
+<main>
+  <div class="intro">
+    <b>Πώς να διαβάσεις αυτή τη σελίδα:</b>
+    <ol>
+      <li>Διάβασε τη <b>θεωρία</b> κάθε ενότητας.</li>
+      <li>Πάτα <b>▶ Τρέξε</b> στο παράδειγμα. Μετά <b>άλλαξέ το</b> και ξανατρέξε: έτσι το καταλαβαίνεις!</li>
+      <li>Διάβασε την κίτρινη κάρτα <b>📌 Παγίδες & Προσοχή</b>: αυτές βάζουν στην εξέταση.</li>
+      <li>Απάντησε στις ερωτήσεις <b>αυτοελέγχου</b>, πρώτα με το μυαλό σου και χωρίς να τρέξεις τον κώδικα. Πάτα <b>Έλεγχος</b> και διάβασε την εξήγηση, ακόμα κι αν το βρήκες.</li>
+    </ol>
+    Μετράει η <b>πρώτη</b> σου απάντηση. Στο τέλος θα δεις ποιες ενότητες θέλουν ξαναδιάβασμα. Μετά: το κουίζ! 💪
+  </div>
+  <div id="topics"></div>
+  <div class="final" id="final"></div>
+  <footer>ROBOTONIO-Lab · PCEP 2026-27 · Ο κώδικας τρέχει μέσα στον browser σου (Pyodide)</footer>
+</main>
+<script>
+const TOPICS = [{"id": "s1", "title": "print, sep, end και σχόλια", "theory": "<p>Το <code>print()</code> τυπώνει ό,τι του δώσεις. Με <b>κόμματα</b> τυπώνει πολλά πράγματα, με ένα <b>κενό</b> ανάμεσα. Στο τέλος αλλάζει μόνο του γραμμή.</p><ul><li><code>sep=</code> αλλάζει αυτό που μπαίνει <b>ανάμεσα</b> (αντί για κενό).</li><li><code>end=</code> αλλάζει αυτό που μπαίνει <b>στο τέλος</b> (αντί για αλλαγή γραμμής).</li><li>Ό,τι είναι μετά το <code>#</code> είναι <b>σχόλιο</b>: η Python το αγνοεί.</li></ul>", "example": "print(\"Γεια\", \"σου\", 2026)\nprint(\"A\", \"B\", \"C\", sep=\"-\")\nprint(\"χωρίς αλλαγή\", end=\" \")\nprint(\"γραμμής\")\n# αυτό είναι σχόλιο και δεν τυπώνεται\n", "pitfalls": ["Το <code>sep</code> μπαίνει μόνο <b>ανάμεσα</b>, ποτέ στο τέλος.", "Το <code>end</code> επηρεάζει το <b>επόμενο</b> print: συνεχίζει στην ίδια γραμμή.", "Ένα <code>#</code> μέσα σε εισαγωγικά (<code>\"#1\"</code>) δεν είναι σχόλιο, είναι κείμενο."], "mcq": [{"code": "print(\"Hi\", end=\"*\")\nprint(\"Bye\")", "opts": ["Hi*\nBye", "Hi*Bye", "Hi Bye*", "Hi\n*Bye"], "concept": "Το <code>end=</code> αντικαθιστά την αλλαγή γραμμής στο τέλος του print.", "steps": "Το πρώτο print γράφει <code>Hi</code> και στο τέλος <code>*</code> αντί για αλλαγή γραμμής. Το δεύτερο συνεχίζει στην ίδια γραμμή: <code>Bye</code>.", "whynot": "Δεν υπάρχει αλλαγή γραμμής μετά το *, γιατί το end την αντικατέστησε. Και κενό δεν μπαίνει, γιατί το end είναι μόνο το «*».", "q": "What is the output?", "c": 1}, {"code": "print(1, 2, 3, sep=\"+\")", "opts": ["6", "1 + 2 + 3", "1+2+3", "1+2+3+"], "concept": "Το <code>sep=</code> είναι αυτό που μπαίνει ανάμεσα στα πράγματα που τυπώνονται. Δεν κάνει πράξεις.", "steps": "Τρία πράγματα: 1, 2, 3. Ανάμεσά τους μπαίνει <code>+</code>: <code>1+2+3</code>.", "whynot": "Το 6 θα έβγαινε μόνο με print(1 + 2 + 3), δηλαδή με πράξη. Κενά δεν μπαίνουν, γιατί το sep τα αντικατέστησε. Το sep δεν μπαίνει στο τέλος.", "q": "What is the output?", "c": 2}], "short": "print"}, {"id": "s2", "title": "Μεταβλητές και τύποι", "theory": "<p>Μεταβλητή = ένα όνομα για μια τιμή: <code>score = 10</code>. Η τιμή μπορεί να αλλάξει αργότερα.</p><p><b>Κανόνες ονομάτων:</b> ξεκινάει με γράμμα ή <code>_</code>, έχει μόνο γράμματα, ψηφία και <code>_</code>, δεν είναι λέξη της Python (<code>for</code>, <code>if</code>…). Τα κεφαλαία μετράνε: <code>age</code> ≠ <code>Age</code>.</p><p><b>4 βασικοί τύποι:</b> <code>int</code> (ακέραιος: 13), <code>float</code> (δεκαδικός: 1.62), <code>str</code> (κείμενο: \"Νίκος\"), <code>bool</code> (<code>True</code> / <code>False</code>). Τον τύπο τον βλέπεις με <code>type()</code>.</p>", "example": "age = 13\nheight = 1.62\nname = \"Νίκος\"\nis_student = True\nprint(type(age))\nprint(type(height))\nprint(type(name))\nprint(type(is_student))\n", "pitfalls": ["<code>\"5\"</code> με εισαγωγικά είναι <b>κείμενο</b>, όχι αριθμός.", "<code>True</code> και <code>False</code> γράφονται με <b>κεφαλαίο</b> πρώτο γράμμα.", "Όνομα δεν ξεκινάει με ψηφίο (<code>2fast</code> ✗) και δεν έχει παύλα (<code>my-score</code> ✗)."], "mcq": [{"code": null, "q": "Which one is a valid variable name?", "opts": ["2fast", "my-score", "_level", "for"], "concept": "Ένα όνομα ξεκινάει με γράμμα ή _, έχει μόνο γράμματα, ψηφία και _, και δεν είναι δεσμευμένη λέξη.", "steps": "Το _level ξεκινάει με _ και μετά έχει μόνο γράμματα, άρα είναι έγκυρο.", "whynot": "Το 2fast ξεκινάει με ψηφίο. Το my-score έχει παύλα, που η Python τη διαβάζει ως «μείον». Το for είναι λέξη της Python.", "c": 2}, {"code": "x = 5\nX = 10\nprint(x)", "opts": ["5", "10", "Error", "15"], "concept": "Η Python ξεχωρίζει κεφαλαία από πεζά: x και X είναι δύο διαφορετικές μεταβλητές.", "steps": "x = 5, X = 10 (άλλη μεταβλητή). Το print(x) τυπώνει το μικρό x: 5.", "whynot": "Το X = 10 δεν αλλάζει το x. Δεν γίνεται πρόσθεση. Δεν είναι λάθος να έχεις και τα δύο ονόματα.", "q": "What is the output?", "c": 0}], "short": "Μεταβλητές"}, {"id": "s3", "title": "input και μετατροπές (int, float, str)", "theory": "<p>Το <code>input()</code> περιμένει τον χρήστη να γράψει κάτι και το δίνει <b>πάντα ως κείμενο (str)</b>, ακόμα κι αν γράψει αριθμό.</p><p>Για πράξεις το μετατρέπεις: <code>int()</code> σε ακέραιο, <code>float()</code> σε δεκαδικό, <code>str()</code> σε κείμενο.</p><p>Το <code>int(7.9)</code> <b>κόβει</b> τα δεκαδικά (7), δεν στρογγυλεύει. Το <code>int(\"3.5\")</code> βγάζει σφάλμα, γιατί το \"3.5\" δεν είναι κείμενο ακεραίου.</p>", "example": "name = input(\"Πώς σε λένε; \")\nage = int(input(\"Πόσο χρονών είσαι; \"))\nprint(name, \"σε 5 χρόνια θα είσαι\", age + 5)\n", "pitfalls": ["Χωρίς <code>int()</code>: <code>input() + 5</code> → σφάλμα (κείμενο + αριθμός).", "<code>int()</code> κόβει: <code>int(9.99)</code> → 9.", "<code>int(\"3.5\")</code> → σφάλμα. Το <code>float(\"3.5\")</code> δουλεύει."], "mcq": [{"code": "print(int(7.9))", "opts": ["Error", "7.9", "8", "7"], "concept": "Το int() πετάει το δεκαδικό μέρος, δεν στρογγυλεύει.", "steps": "Από το 7.9 κρατάει μόνο το ακέραιο μέρος: 7.", "whynot": "Το 8 θα ήταν στρογγυλοποίηση, που το int() δεν κάνει. Το 7.9 μένει float μόνο χωρίς int(). Σφάλμα δεν βγαίνει, γιατί το int() δέχεται float.", "q": "What is the output?", "c": 3}, {"code": "x = \"4\" + \"6\"\nprint(int(x) + 1)", "opts": ["Error", "11", "47", "461"], "concept": "Τα κείμενα με + κολλάνε. Το int() μετατρέπει το κείμενο σε αριθμό.", "steps": "\"4\" + \"6\" = \"46\" (κόλλημα). int(\"46\") = 46. 46 + 1 = 47.", "whynot": "Το 11 θα έβγαινε αν τα \"4\", \"6\" ήταν αριθμοί. Το 461 αν το 1 κολλούσε ως κείμενο. Σφάλμα δεν βγαίνει: το \"46\" είναι κείμενο ακεραίου.", "q": "What is the output?", "c": 2}, {"code": "print(int(\"3.5\"))", "opts": ["4", "Error", "3.5", "3"], "concept": "Το int() δέχεται κείμενο μόνο αν περιέχει ακέραιο.", "steps": "Το \"3.5\" έχει τελεία, άρα δεν είναι ακέραιος. Βγαίνει ValueError.", "whynot": "Το 3 θα έβγαινε με int(3.5), δηλαδή με αριθμό και όχι κείμενο. Το int() δεν στρογγυλεύει (4) και δεν κρατάει δεκαδικά (3.5).", "q": "What is the output?", "c": 1}], "short": "input & int"}, {"id": "s4", "title": "Αριθμητικοί τελεστές και προτεραιότητα", "theory": "<table class='t'><tr><td><code>+ - *</code></td><td>πρόσθεση, αφαίρεση, πολλαπλασιασμός</td></tr><tr><td><code>/</code></td><td>διαίρεση · δίνει <b>πάντα float</b>: <code>6 / 2</code> → 3.0</td></tr><tr><td><code>//</code></td><td>ακέραια διαίρεση: <code>7 // 2</code> → 3</td></tr><tr><td><code>%</code></td><td>υπόλοιπο: <code>7 % 2</code> → 1</td></tr><tr><td><code>**</code></td><td>δύναμη: <code>2 ** 3</code> → 8</td></tr></table><p><b>Σειρά:</b> πρώτα οι παρενθέσεις, μετά <code>**</code>, μετά το μείον μπροστά από αριθμό, μετά <code>* / // %</code> (από αριστερά προς δεξιά), και τέλος <code>+ -</code>.</p><p>Το <code>**</code> είναι το μόνο που υπολογίζεται <b>από δεξιά</b>: <code>2 ** 3 ** 2</code> = <code>2 ** 9</code> = 512.</p>", "example": "print(7 / 2, 7 // 2, 7 % 2, 2 ** 3)\nprint(6 / 2)\nprint(2 + 3 * 4)\nprint((2 + 3) * 4)\nprint(2 ** 3 ** 2)\nprint(-2 ** 2)\nprint(-7 // 2)\n", "pitfalls": ["<code>-2 ** 2</code> → <b>-4</b>: πρώτα η δύναμη, μετά το μείον.", "<code>6 / 2</code> → <b>3.0</b>, όχι 3.", "<code>-7 // 2</code> → <b>-4</b>: το <code>//</code> πηγαίνει πάντα προς τα <b>κάτω</b>."], "mcq": [{"code": "print(10 / 5)", "opts": ["2", "2.0", "5", "0.5"], "concept": "Το / δίνει πάντα float, ακόμα κι αν η διαίρεση βγαίνει ακριβής.", "steps": "10 / 5 = 2, αλλά ως float: 2.0.", "whynot": "Το 2 (int) θα έβγαινε με 10 // 5. Τα 5 και 0.5 είναι λάθος πράξεις.", "q": "What is the output?", "c": 1}, {"code": "print(2 ** 3 ** 2)", "opts": ["512", "64", "36", "Error"], "concept": "Το ** υπολογίζεται από δεξιά προς αριστερά.", "steps": "Πρώτα 3 ** 2 = 9. Μετά 2 ** 9 = 512.", "whynot": "Το 64 θα ήταν (2 ** 3) ** 2, από αριστερά, όπως δεν δουλεύει το **. Το 36 είναι (2 * 3) ** 2. Σφάλμα δεν βγαίνει.", "q": "What is the output?", "c": 0}, {"code": "print(10 - 2 * 3 % 4)", "opts": ["10", "0", "8", "2"], "concept": "Τα *, % έχουν ίδια προτεραιότητα και γίνονται από αριστερά προς δεξιά, πριν από το -.", "steps": "2 * 3 = 6 → 6 % 4 = 2 → 10 - 2 = 8.", "whynot": "Το 0 θα έβγαινε αν έκανες πρώτα την αφαίρεση: (10 - 2) * 3 % 4 = 24 % 4 = 0. Το 2 είναι μόνο το ενδιάμεσο (6 % 4). Το 10 αγνοεί τις πράξεις.", "q": "What is the output?", "c": 2}], "short": "Τελεστές"}, {"id": "s5", "title": "Συντομεύσεις: +=, -=, *= …", "theory": "<p><code>x += 3</code> σημαίνει ακριβώς <code>x = x + 3</code>. Το ίδιο ισχύει με όλους τους τελεστές: <code>-=</code>, <code>*=</code>, <code>/=</code>, <code>//=</code>, <code>%=</code>, <code>**=</code>.</p>", "example": "x = 10\nx += 5\nprint(x)\nx -= 3\nprint(x)\nx *= 2\nprint(x)\nx /= 4\nprint(x)\n", "pitfalls": ["<code>x /= 2</code> κάνει το x <b>float</b> (όπως το /).", "Η μεταβλητή πρέπει να έχει πάρει τιμή <b>πριν</b>: <code>y += 1</code> χωρίς <code>y = …</code> → NameError."], "mcq": [{"code": "x = 10\nx -= 3\nx *= 2\nprint(x)", "opts": ["4", "20", "14", "17"], "concept": "Κάθε συντόμευση αλλάζει την τιμή της μεταβλητής, με τη σειρά.", "steps": "x = 10 → x = 10 - 3 = 7 → x = 7 * 2 = 14.", "whynot": "Το 4 θα ήταν 10 - 3 * 2, σαν να γράφτηκαν σε μία πράξη. Το 20 αγνοεί το -= 3. Το 17 κάνει + αντί για *.", "q": "What is the output?", "c": 2}, {"code": "x = 7\nx //= 2\nx **= 2\nprint(x)", "opts": ["12.25", "6", "49", "9"], "concept": "//= είναι x = x // 2 και **= είναι x = x ** 2.", "steps": "7 // 2 = 3 → 3 ** 2 = 9.", "whynot": "Το 12.25 θα ήταν με / (3.5 ** 2). Το 49 αγνοεί το //=. Το 6 είναι 3 * 2, πολλαπλασιασμός αντί για δύναμη.", "q": "What is the output?", "c": 3}], "short": "+= -="}, {"id": "s6", "title": "Κείμενα: + και *", "theory": "<p>Με κείμενα, το <code>+</code> <b>κολλάει</b>: <code>\"Py\" + \"thon\"</code> → Python. Το <code>*</code> με αριθμό <b>επαναλαμβάνει</b>: <code>\"ha\" * 3</code> → hahaha.</p><p>Κείμενο + αριθμός → <b>σφάλμα</b>. Χρησιμοποίησε <code>str()</code>: <code>\"Level \" + str(3)</code>.</p>", "example": "print(\"Py\" + \"thon\")\nprint(\"ha\" * 3)\nprint(\"-\" * 20)\nlevel = 3\nprint(\"Level \" + str(level))\nprint(\"♥\" * level)\n", "pitfalls": ["<code>\"Age: \" + 13</code> → TypeError.", "<code>\"5\" + \"3\"</code> → \"53\", όχι 8.", "Και στα κείμενα το <code>*</code> γίνεται <b>πριν</b> από το <code>+</code>."], "mcq": [{"code": "print(\"Py\" + \"thon\" * 2)", "opts": ["Error", "PythonPython", "Pythonthon", "Py thon thon"], "concept": "Και με κείμενα, το * γίνεται πριν από το +.", "steps": "Πρώτα \"thon\" * 2 = \"thonthon\". Μετά \"Py\" + \"thonthon\" = \"Pythonthon\".", "whynot": "Το PythonPython θα ήταν (\"Py\" + \"thon\") * 2, με παρενθέσεις. Κενά δεν μπαίνουν όταν κολλάς. Σφάλμα δεν βγαίνει: κείμενο * ακέραιος επιτρέπεται.", "q": "What is the output?", "c": 2}, {"code": "print(\"5\" * 3)", "opts": ["15", "555", "Error", "5 5 5"], "concept": "Κείμενο * ακέραιος = επανάληψη του κειμένου.", "steps": "Το \"5\" είναι κείμενο, άρα επαναλαμβάνεται 3 φορές: 555.", "whynot": "Το 15 θα έβγαινε με 5 * 3 χωρίς εισαγωγικά. Κενά δεν μπαίνουν. Σφάλμα δεν βγαίνει.", "q": "What is the output?", "c": 1}, {"code": "print(\"Age: \" + 13)", "opts": ["13", "Age: 13", "Age:13", "Error"], "concept": "Δεν μπορείς να κολλήσεις κείμενο με αριθμό χωρίς str().", "steps": "\"Age: \" είναι str, 13 είναι int. Το + ανάμεσά τους βγάζει TypeError.", "whynot": "Το Age: 13 θα έβγαινε με \"Age: \" + str(13) ή με print(\"Age:\", 13). Η Python δεν μετατρέπει μόνη της.", "q": "What is the output?", "c": 3}], "short": "Κείμενα"}, {"id": "s7", "title": "Συγκρίσεις και True / False", "theory": "<p>Οι συγκρίσεις δίνουν <code>True</code> ή <code>False</code> (τύπος <code>bool</code>): <code>==</code> ίσο, <code>!=</code> διάφορο, <code><</code>, <code>></code>, <code><=</code>, <code>>=</code>.</p><p>Προσοχή: <code>=</code> <b>δίνει τιμή</b>, <code>==</code> <b>συγκρίνει</b>.</p>", "example": "x = 7\nprint(x == 7)\nprint(x != 7)\nprint(x >= 5, x < 5)\nprint(3 == 3.0)\nprint(\"5\" == 5)\n", "pitfalls": ["<code>if x = 5:</code> → SyntaxError. Χρειάζεται <code>==</code>.", "<code>3 == 3.0</code> → True (ίδια τιμή), αλλά <code>\"5\" == 5</code> → False (κείμενο ≠ αριθμός)."], "mcq": [{"code": "print(3 == 3.0)", "opts": ["False", "3", "Error", "True"], "concept": "Το == συγκρίνει τιμές. Ακέραιος και δεκαδικός με την ίδια τιμή είναι ίσοι.", "steps": "Το 3 και το 3.0 έχουν την ίδια τιμή, άρα True.", "whynot": "Οι τύποι διαφέρουν (int / float), αλλά το == κοιτάει την τιμή. Σφάλμα δεν βγαίνει. Η σύγκριση δίνει bool, όχι αριθμό.", "q": "What is the output?", "c": 3}, {"code": "x = 4\nprint(x != 4, x >= 4)", "opts": ["False False", "True False", "False True", "True True"], "concept": "!= σημαίνει «διάφορο». >= σημαίνει «μεγαλύτερο ή ίσο».", "steps": "x != 4 → το 4 δεν είναι διάφορο του 4 → False. x >= 4 → το 4 είναι ίσο → True.", "whynot": "Το >= περιλαμβάνει το ίσο, άρα δεν βγαίνει False. Το != είναι το αντίθετο του ==, άρα δεν βγαίνει True.", "q": "What is the output?", "c": 2}, {"code": "print(\"5\" == 5)", "opts": ["True", "False", "5", "Error"], "concept": "Κείμενο και αριθμός δεν είναι ποτέ ίσα με ==.", "steps": "\"5\" είναι str, 5 είναι int. Διαφορετικοί τύποι → False.", "whynot": "Η Python δεν μετατρέπει μόνη της. Σφάλμα δεν βγαίνει, γιατί το == επιτρέπεται ανάμεσα σε διαφορετικούς τύπους.", "q": "What is the output?", "c": 1}], "short": "Συγκρίσεις"}, {"id": "s8", "title": "Λογικοί τελεστές: and, or, not", "theory": "<table class='t'><tr><td><code>and</code></td><td>True μόνο αν <b>και τα δύο</b> είναι True</td></tr><tr><td><code>or</code></td><td>True αν <b>τουλάχιστον ένα</b> είναι True</td></tr><tr><td><code>not</code></td><td>το αντίθετο</td></tr></table><p><b>Σειρά:</b> πρώτα οι συγκρίσεις, μετά <code>not</code>, μετά <code>and</code>, τελευταίο το <code>or</code>.</p>", "example": "x = 7\nprint(x > 5 and x < 10)\nprint(x < 5 or x == 7)\nprint(not x == 7)\nprint(True or False and False)\n", "pitfalls": ["<code>x > 5 and < 10</code> → SyntaxError. Γράφεις ολόκληρο: <code>x > 5 and x < 10</code>.", "<code>c == \"a\" or \"e\"</code> δεν ελέγχει το \"e\" όπως νομίζεις. Γράφεις <code>c == \"a\" or c == \"e\"</code>.", "Το <code>and</code> γίνεται πριν από το <code>or</code>, ακόμα κι αν είναι γραμμένο δεύτερο."], "mcq": [{"code": "print(not True or True)", "opts": ["True", "Error", "None", "False"], "concept": "Το not γίνεται πριν από το or.", "steps": "not True = False. False or True = True.", "whynot": "Το False θα έβγαινε με not (True or True), με παρενθέσεις. Σφάλμα δεν βγαίνει. Το None δεν είναι αποτέλεσμα λογικής πράξης εδώ.", "q": "What is the output?", "c": 0}, {"code": "x = 7\nprint(x > 5 and x > 10 or x == 7)", "opts": ["False", "Error", "7", "True"], "concept": "Πρώτα οι συγκρίσεις, μετά το and, στο τέλος το or.", "steps": "x > 5 → True, x > 10 → False, x == 7 → True. True and False = False. False or True = True.", "whynot": "Το False είναι παγίδα: αν σταματήσεις στο x > 5 and x > 10 (= False), ξεχνάς το or x == 7, που είναι True. Αριθμό δεν τυπώνει, γιατί το αποτέλεσμα είναι bool. Η σύνταξη είναι σωστή.", "q": "What is the output?", "c": 3}, {"code": "print(False or not False and False)", "opts": ["None", "False", "Error", "True"], "concept": "Σειρά: not → and → or.", "steps": "not False = True. True and False = False. False or False = False.", "whynot": "Το True θα έβγαινε αν έκανες το or πριν από το and. Η σύνταξη είναι σωστή, άρα δεν βγαίνει Error.", "q": "What is the output?", "c": 1}], "short": "and/or/not"}, {"id": "s9", "title": "if / elif / else", "theory": "<p>Το <code>if</code> τρέχει τις γραμμές με εσοχή μόνο αν η συνθήκη είναι True. Σε σκάλα <code>if / elif / else</code> τρέχει <b>μόνο το πρώτο</b> True. Το <code>else</code> τρέχει αν κανένα δεν ήταν True.</p><p>Δύο <b>ξεχωριστά</b> <code>if</code> ελέγχονται <b>και τα δύο</b>.</p>", "example": "score = 75\nif score >= 90:\n    print(\"Άριστα\")\nelif score >= 70:\n    print(\"Πολύ καλά\")\nelif score >= 50:\n    print(\"Καλά\")\nelse:\n    print(\"Προσπάθησε ξανά\")\n", "pitfalls": ["Ξεχνάς τα <code>:</code> στο τέλος → SyntaxError.", "Λάθος εσοχή → IndentationError ή διαφορετική συμπεριφορά.", "Βάλε πρώτα την <b>πιο στενή</b> συνθήκη: αν το <code>score >= 50</code> είναι πρώτο, το 95 θα πάρει «Καλά»."], "mcq": [{"code": "score = 75\nif score >= 90:\n    print(\"A\")\nelif score >= 70:\n    print(\"B\")\nelif score >= 50:\n    print(\"C\")\nelse:\n    print(\"D\")", "opts": ["B", "BC", "A", "D"], "concept": "Σε σκάλα if/elif τρέχει μόνο το πρώτο True, και μετά η σκάλα τελειώνει.", "steps": "75 >= 90; Όχι. 75 >= 70; Ναι → B. Τα υπόλοιπα δεν ελέγχονται.", "whynot": "Το BC θα έβγαινε με ξεχωριστά if. Το A θέλει >= 90. Το D τρέχει μόνο αν όλα είναι False.", "q": "What is the output?", "c": 0}, {"code": "x = 7\nif x > 5:\n    print(\"A\", end=\"\")\nif x > 3:\n    print(\"B\", end=\"\")\nelse:\n    print(\"C\", end=\"\")", "opts": ["ABC", "B", "A", "AB"], "concept": "Δύο ξεχωριστά if ελέγχονται και τα δύο. Το else ανήκει μόνο στο δεύτερο.", "steps": "Πρώτο if: 7 > 5 → A. Δεύτερο if: 7 > 3 → B. Το else του δεύτερου δεν τρέχει. Αποτέλεσμα: AB.", "whynot": "Το A θα ήταν σωστό μόνο αν το δεύτερο ήταν elif. Το C δεν τρέχει, γιατί το 7 > 3 είναι True.", "q": "What is the output?", "c": 3}, {"code": "x = 10\nif x > 5:\n    print(\"big\")\n    if x > 20:\n        print(\"huge\")\nprint(\"end\")", "opts": ["big\nend", "end", "huge\nend", "big\nhuge\nend"], "concept": "Ένα if μέσα σε άλλο if ελέγχεται μόνο αν το εξωτερικό είναι True. Ό,τι δεν έχει εσοχή τρέχει πάντα.", "steps": "10 > 5 → big. Μέσα: 10 > 20; Όχι → τίποτα. Το print(\"end\") δεν έχει εσοχή → end.", "whynot": "Το huge θέλει x > 20. Το end χωρίς big θα ήταν αν το x ≤ 5.", "q": "What is the output?", "c": 0}], "short": "if/elif"}, {"id": "s10", "title": "while, break και while-else", "theory": "<p>Το <code>while συνθήκη:</code> επαναλαμβάνει <b>όσο</b> η συνθήκη είναι True. Η συνθήκη ελέγχεται <b>πριν</b> από κάθε γύρο.</p><p><code>while True:</code> με <code>break</code>: ο βρόχος σταματά μόνο με το <code>break</code> (όπως στα παιχνίδια μας).</p><p>Το <code>else</code> του <code>while</code> τρέχει μόνο αν ο βρόχος τελείωσε <b>χωρίς break</b> (όπως το GAME OVER στη Μνήμη).</p>", "example": "lives = 3\nwhile lives > 0:\n    print(\"Ζωές:\", lives)\n    lives -= 1\nelse:\n    print(\"GAME OVER\")\n", "pitfalls": ["Αν δεν αλλάζει ποτέ η μεταβλητή της συνθήκης → ατέρμονος βρόχος.", "Το <code>else</code> στοιχίζεται με το <code>while</code>, όχι με το <code>if</code>.", "Αν η συνθήκη είναι False από την αρχή, ο βρόχος τρέχει <b>0 φορές</b>, αλλά το <code>else</code> τρέχει!"], "mcq": [{"code": "n = 1\nwhile n < 20:\n    n *= 3\nprint(n)", "opts": ["3", "20", "9", "27"], "concept": "Ο βρόχος σταματά όταν η συνθήκη γίνει False. Το τελευταίο *3 γίνεται πριν τον έλεγχο.", "steps": "n: 1 → 3 → 9 → 27. Μετά το 27, 27 < 20 είναι False, άρα σταματά. Τυπώνει 27.", "whynot": "Το 9 είναι η τελευταία τιμή κάτω από το 20, αλλά ο πολλαπλασιασμός γίνεται πριν τον έλεγχο. Το 20 δεν προκύπτει ποτέ από *3.", "q": "What is the output?", "c": 3}, {"code": "count = 0\nwhile count < 3:\n    count += 1\n    print(count, end=\" \")", "opts": ["1 2", "0 1 2", "1 2 3", "0 1 2 3"], "concept": "Η σειρά των εντολών μέσα στον βρόχο μετράει: εδώ πρώτα αυξάνεται, μετά τυπώνεται.", "steps": "0 → 1 τύπωσε 1 → 2 τύπωσε 2 → 3 τύπωσε 3. Μετά 3 < 3 είναι False, άρα σταματά.", "whynot": "Το 0 1 2 θα έβγαινε αν το print ήταν πριν από το += 1. Γίνονται 3 γύροι, όχι 2 ή 4.", "q": "What is the output?", "c": 2}, {"code": "n = 0\nwhile n < 5:\n    n += 1\n    if n == 3:\n        break\nelse:\n    print(\"end\")\nprint(n)", "opts": ["5", "3", "end\n3", "end\n5"], "concept": "Το else του while δεν τρέχει όταν ο βρόχος σταμάτησε με break.", "steps": "n: 1, 2, 3 → break. Το else παραλείπεται. print(n) → 3.", "whynot": "Το end θα τύπωνε μόνο χωρίς break. Το 5 θα ήταν αν δεν υπήρχε break.", "q": "What is the output?", "c": 1}], "short": "while"}, {"id": "s11", "title": "for και range()", "theory": "<table class='t'><tr><td><code>range(4)</code></td><td>0, 1, 2, 3 · ξεκινά από 0, το 4 <b>δεν</b> περιλαμβάνεται</td></tr><tr><td><code>range(2, 6)</code></td><td>2, 3, 4, 5</td></tr><tr><td><code>range(0, 10, 3)</code></td><td>0, 3, 6, 9 · βήμα 3</td></tr><tr><td><code>range(5, 0, -1)</code></td><td>5, 4, 3, 2, 1 · ανάποδα</td></tr><tr><td><code>range(4, 2)</code></td><td>άδειο · 0 γύροι</td></tr></table><p>Το <code>for</code> περνάει και από τα γράμματα ενός κειμένου: <code>for c in \"ROBOT\":</code>.</p><p><code>break</code> = σταμάτα τον βρόχο. <code>continue</code> = προσπέρασε τον γύρο. Το <code>else</code> του <code>for</code> τρέχει αν <b>δεν</b> έγινε break.</p>", "example": "for i in range(1, 6):\n    print(i, end=\" \")\nprint()\nfor i in range(10, 0, -3):\n    print(i, end=\" \")\nprint()\nfor c in \"ROBOT\":\n    print(c, end=\"-\")\nprint()\ntotal = 0\nfor i in range(1, 101):\n    total += i\nprint(\"1+2+...+100 =\", total)\n", "pitfalls": ["Το τέλος του <code>range</code> <b>δεν</b> περιλαμβάνεται: για 1 έως 10 γράφεις <code>range(1, 11)</code>.", "Για να μετρήσεις ανάποδα χρειάζεσαι <b>αρνητικό βήμα</b>: <code>range(5, 0)</code> είναι άδειο.", "Μετά τον βρόχο, το <code>i</code> κρατά την <b>τελευταία</b> τιμή του."], "mcq": [{"code": "for i in range(3):\n    print(i, end=\"\")", "opts": ["012", "0123", "3", "123"], "concept": "Το range(3) δίνει 0, 1, 2: ξεκινά από 0 και σταματά πριν το 3.", "steps": "i = 0, 1, 2. Τυπώνονται κολλητά (end=\"\"): 012.", "whynot": "Το 123 θα ήταν range(1, 4). Το 3 δεν περιλαμβάνεται ποτέ.", "q": "What is the output?", "c": 0}, {"code": "for i in range(1, 10, 4):\n    print(i, end=\" \")", "opts": ["1 5 9", "1 4 7", "1 5", "4 8"], "concept": "Το τρίτο νούμερο είναι το βήμα. Σταματά πριν φτάσει στο τέλος.", "steps": "1 → 1 + 4 = 5 → 5 + 4 = 9 → 13 (≥ 10, άρα σταματά). Τυπώνει 1 5 9.", "whynot": "Το 9 είναι μικρότερο από το 10, άρα περιλαμβάνεται. Το 1 4 7 θα ήταν με βήμα 3. Ξεκινά από το 1, όχι από το 4.", "q": "What is the output?", "c": 0}, {"code": "for c in \"abc\":\n    print(c * 2, end=\"\")", "opts": ["abcabc", "aabbcc", "abc2", "Error"], "concept": "Το for περνάει γράμμα-γράμμα. Κάθε γράμμα * 2 = διπλό γράμμα.", "steps": "a → aa, b → bb, c → cc. Κολλητά: aabbcc.", "whynot": "Το abcabc θα ήταν \"abc\" * 2. Το c * 2 είναι επανάληψη, όχι κόλλημα του 2. Σφάλμα δεν βγαίνει.", "q": "What is the output?", "c": 1}, {"code": "for i in range(5):\n    if i == 3:\n        continue\n    print(i, end=\"\")", "opts": ["0124", "012", "01234", "3"], "concept": "Το continue προσπερνά μόνο τον τρέχοντα γύρο. Ο βρόχος συνεχίζει.", "steps": "0 → 0, 1 → 1, 2 → 2, 3 → continue (δεν τυπώνει), 4 → 4. Αποτέλεσμα: 0124.", "whynot": "Το 012 θα ήταν με break, που σταματά όλο τον βρόχο. Το 01234 αγνοεί το continue.", "q": "What is the output?", "c": 0}, {"code": "for i in range(3):\n    pass\nprint(i)", "opts": ["0", "Error", "3", "2"], "concept": "Μετά το for, η μεταβλητή κρατά την τελευταία τιμή που πήρε.", "steps": "Το i παίρνει 0, 1, 2. Ο βρόχος τελειώνει, το i μένει 2.", "whynot": "Το 3 δεν το παίρνει ποτέ, γιατί το range(3) σταματά στο 2. Σφάλμα δεν βγαίνει: το i υπάρχει μετά τον βρόχο. (Το pass = «μην κάνεις τίποτα».)", "q": "What is the output?", "c": 3}], "short": "for/range"}];
+const PYODIDE_URL = "https://cdn.jsdelivr.net/pyodide/v0.29.4/full/";
+const CHECK_TIMEOUT_MS = 8000;
+const MAX_OUT = 20000;
+const STORE = "pcep_revision_1_7_v1";
+let state = { ans: {} };
+try { const s = JSON.parse(localStorage.getItem(STORE)); if (s) state = Object.assign(state, s); } catch (e) {}
+function save() { try { localStorage.setItem(STORE, JSON.stringify(state)); } catch (e) {} }
+/* ---------- python runner (one worker) ---------- */
+const WORKER_SRC = `
+importScripts("${PYODIDE_URL}pyodide.js");
+let py = null, pendingInput = null, total = 0, flooded = false;
+const LIMIT = ${MAX_OUT};
+const dec = new TextDecoder();
+async function boot() {
+  py = await loadPyodide({ indexURL: "${PYODIDE_URL}" });
+  py.setStdout({ write: (buf) => {
+    total += buf.length;
+    if (total > LIMIT) { if (!flooded) { flooded = true; postMessage({ t: "flood" }); } throw new Error("too much output"); }
+    postMessage({ t: "out", s: dec.decode(buf, { stream: true }) }); return buf.length; } });
+  py.setStderr({ write: (buf) => { postMessage({ t: "err", s: dec.decode(buf, { stream: true }) }); return buf.length; } });
+  py.globals.set("__js_input", (p) => new Promise((res) => { pendingInput = res; postMessage({ t: "input", p: p }); }));
+  await py.runPythonAsync(\`
+import sys, asyncio
+try:
+    sys.stdout.reconfigure(line_buffering=True)
+except Exception:
+    pass
+async def __input(prompt=""):
+    sys.stdout.write(str(prompt))
+    sys.stdout.flush()
+    return str(await __js_input(""))
+async def __sleep(s):
+    sys.stdout.flush()
+    await asyncio.sleep(s)
+\`);
+  postMessage({ t: "ready" });
+}
+const booted = boot().catch((e) => postMessage({ t: "fatal", s: String(e) }));
+onmessage = async (e) => {
+  const m = e.data;
+  if (m.t === "input") { if (pendingInput) { const r = pendingInput; pendingInput = null; r(m.v); } return; }
+  if (m.t === "run") {
+    await booted;
+    total = 0; flooded = false;
+    const ns = py.globals.get("dict")();
+    ns.set("__input", py.globals.get("__input"));
+    ns.set("__sleep", py.globals.get("__sleep"));
+    ns.set("__name__", "__main__");
+    try {
+      await py.runPythonAsync(m.code, { globals: ns, filename: "kodikas.py" });
+      py.runPython("import sys; sys.stdout.flush(); sys.stderr.flush()");
+      postMessage({ t: "done", ok: true });
+    } catch (err) {
+      try { py.runPython("import sys; sys.stdout.flush()"); } catch (_) {}
+      postMessage({ t: "pyerr", s: String(err.message || err) });
+      postMessage({ t: "done", ok: false });
+    } finally { ns.destroy(); }
+  }
+};`;
+
+let worker = null, workerReady = false, active = null;
+function makeWorker() {
+  workerReady = false;
+  const url = URL.createObjectURL(new Blob([WORKER_SRC], { type: "text/javascript" }));
+  worker = new Worker(url);
+  worker.onmessage = (e) => {
+    const m = e.data;
+    if (m.t === "ready") { workerReady = true; if (active && active.waiting) { active.waiting = false; active.term.clearSys(); startActive(); } return; }
+    if (m.t === "fatal") { if (active) active.term.line("Δεν φόρτωσε η Python. Έλεγξε τη σύνδεση στο internet και ξαναφόρτωσε τη σελίδα.", "err"); finish(false); return; }
+    if (!active) return;
+    if (m.t === "flood") { active.term.line("■ Πάρα πολλή έξοδος — μήπως ο βρόχος δεν σταματάει ποτέ; (π.χ. ξέχασες να αλλάζεις τη μεταβλητή)", "tip"); stopRun(true); return; }
+    if (m.t === "out" || m.t === "err") {
+      if (m.t === "out") active.out += m.s;
+      active.term.write(m.s, m.t === "err" ? "err" : null);
+    }
+    else if (m.t === "input") active.term.ask((v) => worker.postMessage({ t: "input", v }));
+    else if (m.t === "pyerr") active.term.error(m.s);
+    else if (m.t === "done") { active.term.line(m.ok ? "— Τέλος προγράμματος —" : "— Σταμάτησε με σφάλμα —", "sys"); finish(m.ok); }
+  };
+}
+function startActive() {
+  worker.postMessage({ t: "run", code: active.code });
+  if (active.timed) active.timer = setTimeout(() => {
+    if (!active) return;
+    active.term.line("⏱ Το πρόγραμμα τρέχει πάνω από 8 δευτερόλεπτα. Μήπως ο βρόχος δεν σταματάει ποτέ;", "tip");
+    stopRun(true);
+  }, CHECK_TIMEOUT_MS);
+}
+function finish(ok) {
+  if (!active) return;
+  const a = active; active = null;
+  clearTimeout(a.timer);
+  a.ui.running(false);
+  if (a.onDone) a.onDone(ok, a.out);
+}
+function transform(code) {
+  return code.replace(/\binput\s*\(/g, "await __input(").replace(/\btime\s*\.\s*sleep\s*\(/g, "await __sleep(");
+}
+function runCode(code, term, ui, onDone) {
+  if (active) stopRun(true);
+  if (!worker) makeWorker();
+  term.clear();
+  const timed = !/\binput\s*\(/.test(code);
+  active = { term, ui, code: transform(code), waiting: !workerReady, out: "", onDone, timed };
+  ui.running(true);
+  if (workerReady) startActive();
+  else term.line("Φορτώνει η Python… (μόνο την πρώτη φορά, λίγα δευτερόλεπτα)", "sys");
+}
+function stopRun(silent) {
+  if (!active) return;
+  worker.terminate(); worker = null; workerReady = false;
+  if (!silent) active.term.line("■ Σταμάτησες το πρόγραμμα.", "sys");
+  active.term.closeAsk();
+  finish(false);
+  makeWorker();
+}
+
+/* ---------- terminal ---------- */
+function Terminal(el) {
+  let askEl = null, pend = "", raf = 0;
+  const scroll = () => { el.scrollTop = el.scrollHeight; };
+  const flush = () => {
+    if (raf) { cancelAnimationFrame(raf); raf = 0; }
+    if (!pend) return;
+    const sp = document.createElement("span"); sp.textContent = pend; pend = ""; el.appendChild(sp);
+    while (el.childNodes.length > 400) el.removeChild(el.firstChild);
+    scroll();
+  };
+  const t = {
+    clear() { pend = ""; if (raf) { cancelAnimationFrame(raf); raf = 0; } el.textContent = ""; askEl = null; },
+    clearSys() { el.querySelectorAll(".sys").forEach((n) => n.remove()); },
+    write(s, cls) {
+      if (!cls) { pend += s; if (!raf) raf = requestAnimationFrame(flush); return; }
+      flush(); const sp = document.createElement("span"); sp.className = cls; sp.textContent = s; el.appendChild(sp); scroll();
+    },
+    line(s, cls) { flush(); if (el.textContent && !el.textContent.endsWith("\n")) t.write("\n"); t.write(s + "\n", cls); },
+    ask(cb) {
+      flush();
+      const inp = document.createElement("input"); inp.setAttribute("aria-label", "Η απάντησή σου");
+      el.appendChild(inp); askEl = inp; scroll(); inp.focus();
+      inp.addEventListener("keydown", (ev) => {
+        if (ev.key !== "Enter") return;
+        const v = inp.value; const sp = document.createElement("span"); sp.className = "ans"; sp.textContent = v + "\n";
+        inp.replaceWith(sp); askEl = null; scroll(); cb(v);
+      });
+    },
+    closeAsk() { if (askEl) { askEl.remove(); askEl = null; } },
+    error(msg) {
+      const lines = msg.split("\n"); const i = lines.findIndex((l) => l.includes('File "kodikas.py"'));
+      const keep = (i >= 0 ? lines.slice(i) : lines.slice(-3)).filter((l) => l.trim()).join("\n").replace(/kodikas\.py/g, "ο κώδικάς σου");
+      t.line(keep, "err");
+      const last = lines.filter((l) => l.trim()).pop() || "";
+      const tip = hint(last); if (tip) t.line("💡 " + tip, "tip");
+    },
+  };
+  return t;
+}
+function hint(e) {
+  if (/name '_+' is not defined/.test(e)) return "Συμπλήρωσε τα κενά ___ με τη σωστή τιμή.";
+  if (/can only concatenate str \(not "int"\)/.test(e)) return "Κολλάς κείμενο με αριθμό. Μήπως ξέχασες το str( );";
+  if (/unsupported operand type.*'int' and 'str'/.test(e)) return "Προσθέτεις αριθμό με κείμενο. Μήπως χρειάζεται int( ) ή str( );";
+  if (/'(int|str)' object is not iterable/.test(e)) return "Το for θέλει κάτι να «περάσει»: range(...) ή κείμενο. Μήπως ξέχασες το range( );";
+  if (/invalid literal for int/.test(e)) return "Το int( ) πήρε κάτι που δεν είναι ακέραιος.";
+  if (/NameError/.test(e)) { const m = e.match(/name '(.+?)'/); return "Η Python δεν ξέρει το «" + (m ? m[1] : "?") + "». Ορθογραφία; Το όρισες πριν το χρησιμοποιήσεις;"; }
+  if (/IndentationError/.test(e)) return "Πρόβλημα με τα κενά στην αρχή της γραμμής (εσοχή). Ό,τι είναι μέσα στο for θέλει 4 κενά.";
+  if (/'break' outside loop|'continue' (not properly in|outside) loop/.test(e)) return "Το break / continue πρέπει να είναι μέσα σε βρόχο (με εσοχή).";
+  if (/await.*outside/.test(e)) return "Μην βάζεις input( ) μέσα σε def σε αυτή τη σελίδα.";
+  if (/SyntaxError/.test(e)) return "Λάθος σύνταξης: έλεγξε άνω-κάτω τελείες ( : ) στο τέλος του for/if, παρενθέσεις και εισαγωγικά.";
+  if (/ZeroDivisionError/.test(e)) return "Διαίρεση με το μηδέν!";
+  return "";
+}
+
+/* ---------- IDE widget ---------- */
+function makeIDE(host, opts) {
+  host.classList.add("ide");
+  host.innerHTML = `<div class="bar"><button class="btn b-navy run">${opts.check ? "▶ Τρέξε & Έλεγξε" : "▶ Τρέξε"}</button><button class="btn b-red stop" disabled>■ Σταμάτα</button>${opts.reset ? '<button class="btn b-light reset">↺ Από την αρχή</button>' : ""}<span class="status"></span></div><div class="ed"></div><div class="term" aria-live="polite"></div><div class="verdict"></div>`;
+  const cm = CodeMirror(host.querySelector(".ed"), {
+    value: opts.value, mode: "python", lineNumbers: true, indentUnit: 4, tabSize: 4, indentWithTabs: false, viewportMargin: Infinity,
+    extraKeys: { Tab: (c) => c.somethingSelected() ? c.indentSelection("add") : c.replaceSelection("    "), "Shift-Tab": (c) => c.indentSelection("subtract") },
+  });
+  if (opts.onChange) cm.on("change", () => opts.onChange(cm.getValue()));
+  const term = Terminal(host.querySelector(".term"));
+  const vEl = host.querySelector(".verdict");
+  const runB = host.querySelector(".run"), stopB = host.querySelector(".stop"), st = host.querySelector(".status");
+  const ui = { running(on) { runB.disabled = on; stopB.disabled = !on; st.textContent = on ? "τρέχει…" : ""; } };
+  term.line("Πάτα ▶ για να τρέξει ο κώδικας.", "sys");
+  runB.onclick = () => {
+    vEl.className = "verdict"; vEl.innerHTML = "";
+    const code = cm.getValue();
+    runCode(code, term, ui, opts.check ? (ok, out) => {
+      const v = verdict(opts.check, ok, out, code);
+      vEl.className = "verdict " + (v.pass ? "ok" : "no"); vEl.innerHTML = v.html;
+      opts.onVerdict && opts.onVerdict(v.pass);
+    } : null);
+  };
+  stopB.onclick = () => stopRun(false);
+  const rb = host.querySelector(".reset");
+  if (rb) rb.onclick = () => {
+    if (rb.dataset.armed) { delete rb.dataset.armed; rb.textContent = "↺ Από την αρχή"; cm.setValue(opts.reset()); term.clear(); vEl.className = "verdict"; term.line("Ο κώδικας επανήλθε.", "sys"); return; }
+    rb.dataset.armed = "1"; rb.textContent = "Σίγουρα; Πάτα ξανά";
+    setTimeout(() => { if (rb.dataset.armed) { delete rb.dataset.armed; rb.textContent = "↺ Από την αρχή"; } }, 4000);
+  };
+  return cm;
+}
+
+
+const esc = (s) => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+const L = ["A", "B", "C", "D"];
+const host = document.getElementById("topics"), nav = document.getElementById("nav");
+let total = 0, qn = 0;
+TOPICS.forEach((t, ti) => {
+  const sec = document.createElement("section"); sec.className = "topic"; sec.id = t.id;
+  sec.innerHTML = `<h2><span class="n">${ti + 1}</span>${t.title}</h2>
+  <div class="theory">${t.theory}</div>
+  <h3>▶ Δοκίμασε το παράδειγμα (και άλλαξέ το!)</h3><div class="exhost"></div>
+  <div class="pit"><b class="h">📌 Παγίδες & Προσοχή</b><ul>${t.pitfalls.map((p) => "<li>" + p + "</li>").join("")}</ul></div>
+  <h3>✅ Αυτοέλεγχος</h3><div class="qs"></div>`;
+  host.appendChild(sec);
+  makeIDE(sec.querySelector(".exhost"), { value: t.example, reset: () => t.example });
+  const a = document.createElement("a"); a.href = "#" + t.id; a.textContent = (ti + 1) + ". " + t.short; a.dataset.t = t.id; nav.appendChild(a);
+  const qs = sec.querySelector(".qs");
+  t.mcq.forEach((m, mi) => {
+    qn++; total++;
+    const id = t.id + "_" + mi;
+    const card = document.createElement("div"); card.className = "q"; card.id = "q-" + id;
+    card.innerHTML = `<div class="qh">Ερώτηση ${qn}<span class="res"></span></div><div class="qb">
+      <div class="qt">${esc(m.q)}</div>${m.code ? `<pre class="code">${esc(m.code)}</pre>` : ""}
+      <div class="opts">${m.opts.map((o, i) => `<button class="opt" data-i="${i}"><span class="L">${L[i]}</span><span>${esc(o)}</span></button>`).join("")}</div>
+      <div class="qact"><button class="btn b-gold chk" disabled>Έλεγχος</button><span class="hintsel" style="font-size:13px;color:var(--mid)">Διάλεξε μια απάντηση</span></div>
+      <div class="exp"><p><b>💡 Έννοια:</b> ${m.concept}</p><p><b>🔍 Ανάλυση βήμα-βήμα:</b> ${m.steps}</p><p><b>❌ Γιατί όχι τα άλλα:</b> ${m.whynot}</p></div></div>`;
+    qs.appendChild(card);
+    const btns = [...card.querySelectorAll(".opt")], chk = card.querySelector(".chk");
+    let sel = null;
+    const reveal = (choice) => {
+      btns.forEach((b, i) => { b.disabled = true; b.classList.remove("sel"); if (i === m.c) b.classList.add("right"); else if (i === choice) b.classList.add("wrong"); });
+      const ok = choice === m.c;
+      card.classList.add(ok ? "ok" : "no");
+      card.querySelector(".res").textContent = ok ? "✓ Σωστό!" : "✗ Η σωστή είναι η " + L[m.c];
+      card.querySelector(".res").style.color = ok ? "var(--green)" : "var(--red)";
+      card.querySelector(".exp").classList.add("open");
+      chk.style.display = "none"; card.querySelector(".hintsel").style.display = "none";
+    };
+    btns.forEach((b) => b.onclick = () => { sel = +b.dataset.i; btns.forEach((x) => x.classList.toggle("sel", x === b)); chk.disabled = false; card.querySelector(".hintsel").textContent = ""; });
+    chk.onclick = () => { if (sel === null) return; state.ans[id] = sel; save(); reveal(sel); refresh(); };
+    if (state.ans[id] != null) reveal(state.ans[id]);
+  });
+});
+function refresh() {
+  let ok = 0; const weak = [];
+  TOPICS.forEach((t) => {
+    let done = 0, good = 0;
+    t.mcq.forEach((m, mi) => { const a = state.ans[t.id + "_" + mi]; if (a != null) { done++; if (a === m.c) { good++; ok++; } } });
+    const link = nav.querySelector(`a[data-t="${t.id}"]`);
+    link.classList.toggle("done", done === t.mcq.length && good === done);
+    link.classList.toggle("part", done === t.mcq.length && good < done);
+    if (done === t.mcq.length && good < done) weak.push(t);
+  });
+  document.getElementById("score").textContent = ok;
+  document.getElementById("max").textContent = total;
+  const answered = Object.keys(state.ans).length;
+  const f = document.getElementById("final");
+  let html = `<h2>🏁 Είσαι έτοιμος για το κουίζ;</h2><p>Απάντησες σε <b>${answered} / ${total}</b> ερωτήσεις, σωστά με την πρώτη: <b>${ok}</b>.</p>`;
+  if (answered < total) html += `<p>Σου μένουν ${total - answered} ερωτήσεις. Συνέχισε!</p>`;
+  else if (weak.length) html += `<p>Ξαναδιάβασε αυτές τις ενότητες πριν το κουίζ:</p><ul>${weak.map((t) => `<li><a href="#${t.id}">${t.title}</a></li>`).join("")}</ul>`;
+  else html += `<p>Τέλεια! Όλα σωστά. Είσαι έτοιμος! 🚀</p>`;
+  html += `<p style="margin-top:14px"><button class="btn b-light" id="resetAll">↺ Σβήσε τις απαντήσεις μου και ξεκίνα από την αρχή</button></p>`;
+  f.innerHTML = html;
+  const r = document.getElementById("resetAll");
+  r.onclick = () => {
+    if (!r.dataset.armed) { r.dataset.armed = "1"; r.textContent = "Σίγουρα; Πάτα ξανά"; return; }
+    state.ans = {}; save(); location.reload();
+  };
+}
+refresh();
+makeWorker();
+</script>
+</body>
+</html>
